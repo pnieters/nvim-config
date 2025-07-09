@@ -1,14 +1,18 @@
 vim.hl = vim.highlight
 
 require("config.lazy")
+require("everforest").load()
 
 vim.keymap.set("n", "<leader><leader>x", "<cmd>source %<CR>")
 vim.keymap.set("n", "<leader>x", ":.lua <CR>")
 vim.keymap.set("v", "<leader>x", ":lua <CR>")
 
-vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
-vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
-vim.keymap.set("n", "<M-q>", "<cmd>cclose<CR>")
+-- i forgot what these were for 
+-- vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
+-- vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
+-- vim.keymap.set("n", "<M-q>", "<cmd>cclose<CR>")
+
+vim.keymap.set("n", "<leader>-", "<cmd>Oil<CR>")
 
 vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'Highligh when yanking copying text',
@@ -26,19 +30,21 @@ vim.api.nvim_create_autocmd('TermOpen', {
     end
 })
 
--- Autoformatters
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup('lsp_attach_disable_ruff_hover', { clear = true }),
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client)
+        if client == nil then
+            return
+        end
+        if client.name == 'ruff' then
+            -- Disable what Ruff should not do
+            client.server_capabilities.hoverProvider = false
+        end
+    end,
+    desc = 'LSP: Disable Ruff capabilities in favor of pyright',
+})
 
--- prettier for md // not working right
--- vim.api.nvim_create_autocmd("BufWritePre", {
---     pattern = "*.md",
---     callback = function()
---         vim.cmd("silent !prettier --write --print-width 90 --prose-wrap always %")
---         vim.cmd("checktime")
---     end,
--- })
-
-
---
 
 vim.keymap.set("n", "<space>st", function()
     vim.cmd.vnew()

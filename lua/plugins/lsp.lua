@@ -42,6 +42,22 @@ return {
             capabilities = capabilities,
         }
 
+        lspconfig.ruff.setup{
+        }
+
+        lspconfig.pyright.setup {
+            settings = {
+                pyright = {
+                    disableOrganizeImports = true,
+                },
+                python = {
+                    analysis = {
+                        ignore = { '*' },
+                    },
+                },
+            },
+        }
+
         lspconfig.julials.setup {
             -- cmd = { "julia", "--startup-file=no", "--history-file=no", "e",
             --     [[

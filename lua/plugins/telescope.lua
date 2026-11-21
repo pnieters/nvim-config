@@ -18,15 +18,25 @@ return {
 
         vim.keymap.set('n', "<leader>fh", require('telescope.builtin').help_tags)
         vim.keymap.set('n', "<leader>fp", require('telescope.builtin').find_files)
+        vim.keymap.set('n', "<leader>fg", require('telescope.builtin').live_grep)
+
         vim.keymap.set('n', "<leader>en", function()
             require('telescope.builtin').find_files {
                 cwd = vim.fn.stdpath("config") }
         end)
+
         vim.keymap.set('n', "<leader>ep", function()
             require('telescope.builtin').find_files {
                 cwd = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy")
             }
         end)
+
+        -- ThePrimeagen's Project Word Search - Instantly searches the word under your cursor
+        vim.keymap.set('n', '<leader>pw', function()
+            local word = vim.fn.expand("<cword>")
+            require('telescope.builtin').grep_string({ search = word })
+        end, { desc = 'Project Word Search' })
+
 
         require "plugins.telescope.multigrep".setup()
     end
